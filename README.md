@@ -37,7 +37,7 @@ scapy>=2.4.0
 
 ### Platform-Specific Requirements
 
-- **Windows**: Install [Npcap](https://npcap.com/) (recommended) or WinPcap for packet capture support.
+- **Windows**: Install [Npcap](https://github.com/nmap/npcap) (recommended) or WinPcap for packet capture support.
 - **Linux**: Install `libpcap-dev` (Debian-based) or `libpcap-devel` (Red Hat-based) for packet capture support.
 - **macOS**: No additional installation required (libpcap is pre-installed).
 
