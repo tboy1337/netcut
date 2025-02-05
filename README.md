@@ -1,10 +1,10 @@
-# Network Protector
+# NetCutKiller
 
 A cross-platform Python tool designed to protect against ARP spoofing attacks by monitoring and securing network communications.
 
 ## Overview
 
-Network Protector is a security utility that helps defend against Address Resolution Protocol (ARP) based attacks, including ARP spoofing and man-in-the-middle attacks. It works by:
+NetCutKiller is a security utility that helps defend against Address Resolution Protocol (ARP) based attacks, including ARP spoofing and man-in-the-middle attacks. It works by:
 
 - Setting up static ARP entries for your gateway
 - Continuously monitoring network traffic for suspicious ARP packets
