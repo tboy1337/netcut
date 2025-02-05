@@ -28,8 +28,8 @@ scapy>=2.4.0
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/network-protector.git
-cd network-protector
+git clone https://github.com/tboy1337/netcut.git
+cd netcut
 ```
 
 2. Install required dependencies:
