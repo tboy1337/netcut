@@ -1,15 +1,26 @@
-# NetCutKiller
+# Network Security Tools
 
-A cross-platform Python tool designed to protect against ARP spoofing attacks by monitoring and securing network communications.
+A collection of cross-platform Python tools for network security testing and defense, focusing on ARP-based attacks and protections.
 
-## Overview
+## Tools Overview
 
-NetCutKiller is a security utility that helps defend against Address Resolution Protocol (ARP) based attacks, including ARP spoofing and man-in-the-middle attacks. It works by:
+### NetCutKiller
+A defensive tool designed to protect against ARP spoofing attacks by monitoring and securing network communications.
 
-- Setting up static ARP entries for your gateway
-- Continuously monitoring network traffic for suspicious ARP packets
-- Automatically reinforcing protection when potential attacks are detected
-- Supporting Windows, Linux, and macOS systems
+Key Features:
+- Sets up static ARP entries for your gateway
+- Continuously monitors network traffic for suspicious ARP packets
+- Automatically reinforces protection when potential attacks are detected
+- Provides detailed logging of security events
+
+### NetCut
+A network testing tool that simulates ARP spoofing attacks to help assess network security.
+
+Key Features:
+- Discovers active devices on the local network
+- Generates and sends fake ARP responses
+- Supports custom MAC address spoofing
+- Automatic gateway detection and targeting
 
 ## Prerequisites
 
@@ -39,14 +50,15 @@ pip install -r requirements.txt
 
 ## Usage
 
+### NetCutKiller (Defense)
+
 Basic usage requires only your gateway IP address:
 
 ```bash
 python netcutkiller.py 192.168.1.1
 ```
 
-### Advanced Options
-
+Advanced Options:
 ```bash
 python netcutkiller.py <gateway_ip> [--gateway-mac MAC_ADDRESS] [--interface INTERFACE_NAME]
 ```
@@ -56,30 +68,50 @@ Parameters:
 - `--gateway-mac`: Gateway's MAC address (optional, will be auto-detected)
 - `--interface`: Specific network interface to monitor (optional)
 
+### NetCut (Offense)
+
+Basic usage with automatic gateway detection:
+
+```bash
+python netcut.py
+```
+
+Advanced Options:
+```bash
+python netcut.py [--fake-mac MAC_ADDRESS] [--gateway-ip GATEWAY_IP] [--interface INTERFACE_NAME]
+```
+
+Parameters:
+- `--fake-mac`: Custom MAC address for spoofing (optional, random MAC will be generated)
+- `--gateway-ip`: Gateway IP address (optional, will be auto-detected)
+- `--interface`: Specific network interface to use (optional)
+
 ## Features
 
-- **Cross-Platform Support**: Works on Windows, Linux, and macOS
-- **Automatic Gateway Detection**: Automatically determines gateway MAC address
-- **Real-time Monitoring**: Continuously monitors for ARP spoofing attempts
-- **Automatic Protection**: Reinstates protection when attacks are detected
-- **Detailed Logging**: Provides comprehensive logging of security events
+### Cross-Platform Support
+- Works on Windows, Linux, and macOS
+- Automatic gateway detection
+- Interface auto-detection with manual override option
 
-## How It Works
+### Security Features (NetCutKiller)
+- Real-time ARP packet monitoring
+- Automatic attack detection and response
+- Detailed security event logging
+- Static ARP entry management
 
-1. The tool first establishes your gateway's legitimate MAC address
-2. Sets up static ARP entries in your system's ARP table
-3. Monitors network traffic for suspicious ARP packets
-4. When potential attacks are detected:
-   - Logs the incident with details
-   - Reinforces system protection
-   - Alerts the user
+### Testing Features (NetCut)
+- LAN device discovery
+- Customizable MAC address spoofing
+- Continuous ARP packet transmission
+- Detailed operation logging
 
 ## Security Considerations
 
-- Requires root/administrator privileges
-- Modifies system ARP tables
+- Both tools require root/administrator privileges
+- Modify system ARP tables and network configurations
 - Should be used with caution in production environments
-- Not a replacement for comprehensive network security measures
+- NetCut should only be used in controlled testing environments
+- Neither tool is a replacement for comprehensive network security
 
 ## Troubleshooting
 
@@ -87,18 +119,25 @@ Parameters:
 
 1. **Permission Denied**
    - Ensure you're running with administrator/root privileges
+   - Check user permissions for network interface access
 
 2. **Interface Not Found**
    - Verify the network interface name
    - Try running without the --interface parameter
+   - Check if the interface is up and active
 
-3. **Gateway MAC Detection Failure**
-   - Manually specify the gateway MAC address using --gateway-mac
+3. **Gateway Detection Failure**
+   - Manually specify the gateway IP and MAC addresses
    - Verify network connectivity
+   - Check if the gateway is responding to ARP requests
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. When contributing, please:
+- Follow existing code style
+- Add appropriate documentation
+- Include test cases where applicable
+- Update the README if adding new features
 
 ## License
 
@@ -106,4 +145,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Disclaimer
 
-This tool is provided as-is for educational and defensive purposes only. Users are responsible for ensuring compliance with local laws and network policies before deployment.
+These tools are provided as-is for educational and testing purposes only. Users are responsible for:
+- Ensuring compliance with local laws and regulations
+- Following network policies and obtaining necessary permissions
+- Using the tools responsibly and ethically
+- Understanding the potential risks and implications of network testing
+
+The authors are not responsible for any misuse or damage caused by these tools.
