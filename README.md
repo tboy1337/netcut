@@ -137,14 +137,6 @@ Parameters:
    - Verify network connectivity
    - Check if the gateway is responding to ARP requests
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request. When contributing, please:
-- Follow existing code style
-- Add appropriate documentation
-- Include test cases where applicable
-- Update the README if adding new features
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
