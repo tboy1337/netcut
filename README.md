@@ -8,6 +8,7 @@ A collection of cross-platform Python tools for network security testing and def
 A defensive tool designed to protect against ARP spoofing attacks by monitoring and securing network communications.
 
 Key Features:
+- Automatic gateway detection
 - Sets up static ARP entries for your gateway
 - Continuously monitors network traffic for suspicious ARP packets
 - Automatically reinforces protection when potential attacks are detected
@@ -35,12 +36,6 @@ Key Features:
 scapy>=2.4.0
 ```
 
-### Platform-Specific Requirements
-
-- **Windows**: Install [Npcap](https://github.com/nmap/npcap) (recommended) or WinPcap for packet capture support.
-- **Linux**: Install `libpcap-dev` (Debian-based) or `libpcap-devel` (Red Hat-based) for packet capture support.
-- **macOS**: No additional installation required (libpcap is pre-installed).
-
 ## Installation
 
 1. Clone this repository:
@@ -58,23 +53,23 @@ pip install -r requirements.txt
 
 ### NetCutKiller (Defense)
 
-Basic usage requires only your gateway IP address:
+Basic usage with automatic gateway detection:
 
 ```bash
-python netcutkiller.py 192.168.1.1
+python netcutkiller.py
 ```
 
 Advanced Options:
 ```bash
-python netcutkiller.py <gateway_ip> [--gateway-mac MAC_ADDRESS] [--interface INTERFACE_NAME]
+python netcutkiller.py [--gateway-ip GATEWAY_IP] [--gateway-mac MAC_ADDRESS] [--interface INTERFACE_NAME]
 ```
 
 Parameters:
-- `gateway_ip`: Your network gateway's IP address (required)
+- `--gateway-ip`: Your network gateway's IP address (optional, will be auto-detected)
 - `--gateway-mac`: Gateway's MAC address (optional, will be auto-detected)
 - `--interface`: Specific network interface to monitor (optional)
 
-### NetCut (Offense)
+### NetCut (Offence)
 
 Basic usage with automatic gateway detection:
 
@@ -96,10 +91,11 @@ Parameters:
 
 ### Cross-Platform Support
 - Works on Windows, Linux, and macOS
-- Automatic gateway detection
+- Automatic gateway detection on all platforms
 - Interface auto-detection with manual override option
 
 ### Security Features (NetCutKiller)
+- Automatic gateway IP and MAC detection
 - Real-time ARP packet monitoring
 - Automatic attack detection and response
 - Detailed security event logging
@@ -133,9 +129,15 @@ Parameters:
    - Check if the interface is up and active
 
 3. **Gateway Detection Failure**
-   - Manually specify the gateway IP and MAC addresses
+   - If auto-detection fails, manually specify the gateway IP using --gateway-ip
    - Verify network connectivity
    - Check if the gateway is responding to ARP requests
+   - Ensure your system's network configuration is correct
+
+4. **MAC Address Detection Issues**
+   - If gateway MAC detection fails, specify it manually using --gateway-mac
+   - Verify that the gateway IP is correct
+   - Check for firewall rules that might block ARP requests
 
 ## License
 
