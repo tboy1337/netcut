@@ -13,14 +13,15 @@ from scapy.all import (
     conf, 
     get_if_list,
     srp,
-    get_working_if
+    get_working_if,
+    get_if_addr
 )
 
 class NetworkProtector:
-    def __init__(self, gateway_ip: str, gateway_mac: str = None, interface: str = None):
-        self.gateway_ip = gateway_ip
-        self.gateway_mac = gateway_mac
+    def __init__(self, gateway_ip: str = None, gateway_mac: str = None, interface: str = None):
         self.interface = interface or get_working_if()
+        self.gateway_ip = gateway_ip or self._get_default_gateway()
+        self.gateway_mac = gateway_mac
         self.os_type = platform.system().lower()
         
         # Configure logging
@@ -30,8 +31,39 @@ class NetworkProtector:
         )
         self.logger = logging.getLogger(__name__)
 
+    def _get_default_gateway(self) -> str:
+        """Determine the default gateway IP address."""
+        try:
+            if self.os_type == "windows":
+                result = subprocess.run(["ipconfig"], capture_output=True, text=True)
+                for line in result.stdout.splitlines():
+                    if "Default Gateway" in line:
+                        gateway = line.split(":")[1].strip()
+                        if gateway and gateway != "":
+                            return gateway
+            elif self.os_type == "linux":
+                result = subprocess.run(["ip", "route"], capture_output=True, text=True)
+                for line in result.stdout.splitlines():
+                    if "default via" in line:
+                        return line.split()[2]
+            elif self.os_type == "darwin":  # macOS
+                result = subprocess.run(["netstat", "-nr"], capture_output=True, text=True)
+                for line in result.stdout.splitlines():
+                    if "default" in line:
+                        return line.split()[1]
+            
+            self.logger.error(f"Could not automatically determine gateway IP for {self.os_type}")
+            sys.exit(1)
+        except Exception as e:
+            self.logger.error(f"Failed to determine default gateway: {str(e)}")
+            sys.exit(1)
+
     def protect_system(self) -> None:
         """Set up ARP protection based on operating system."""
+        if not self.gateway_ip:
+            self.logger.error("Gateway IP could not be determined")
+            sys.exit(1)
+            
         if not self.gateway_mac:
             self.gateway_mac = self.get_gateway_mac()
             
@@ -51,6 +83,8 @@ class NetworkProtector:
                 sys.exit(1)
                 
             self.logger.info(f"ARP protection enabled for {self.os_type}")
+            self.logger.info(f"Gateway IP: {self.gateway_ip}")
+            self.logger.info(f"Gateway MAC: {self.gateway_mac}")
         except Exception as e:
             self.logger.error(f"Failed to set up protection: {str(e)}")
             sys.exit(1)
@@ -140,8 +174,9 @@ def main():
         description="Cross-platform network protection against ARP-based attacks"
     )
     parser.add_argument(
-        "gateway_ip",
-        help="Gateway IP address"
+        "--gateway-ip",
+        help="Gateway IP address (optional, will be auto-detected if not provided)",
+        default=None
     )
     parser.add_argument(
         "--gateway-mac",
