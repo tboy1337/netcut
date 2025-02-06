@@ -8,7 +8,7 @@ A collection of cross-platform Python tools for network security testing and def
 A defensive tool designed to protect against ARP spoofing attacks by monitoring and securing network communications.
 
 Key Features:
-- Automatic gateway detection
+- Automatic gateway detection on all platforms
 - Sets up static ARP entries for your gateway
 - Continuously monitors network traffic for suspicious ARP packets
 - Automatically reinforces protection when potential attacks are detected
@@ -35,6 +35,11 @@ Key Features:
 ```
 scapy>=2.4.0
 ```
+
+### Platform-Specific Requirements
+- **Windows**: Install [Npcap](https://github.com/nmap/npcap) (recommended) or WinPcap for packet capture support.
+- **Linux**: Install `libpcap-dev` (Debian-based) or `libpcap-devel` (Red Hat-based) for packet capture support.
+- **macOS**: No additional installation required (libpcap is pre-installed).
 
 ## Installation
 
@@ -69,7 +74,7 @@ Parameters:
 - `--gateway-mac`: Gateway's MAC address (optional, will be auto-detected)
 - `--interface`: Specific network interface to monitor (optional)
 
-### NetCut (Offence)
+### NetCut (Offense)
 
 Basic usage with automatic gateway detection:
 
