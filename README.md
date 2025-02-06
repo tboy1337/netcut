@@ -1,7 +1,5 @@
 # Network Security Tools
 
-A collection of cross-platform Python tools for network security testing and defense, focusing on ARP-based attacks and protections.
-
 ## Tools Overview
 
 ### NetCutKiller
