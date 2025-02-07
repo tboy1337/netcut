@@ -20,6 +20,8 @@ Key Features:
 - Generates and sends fake ARP responses
 - Supports custom MAC address spoofing
 - Automatic gateway detection and targeting
+- Supports targeting specific IP addresses
+- Supports both broad and focused testing scenarios
 
 ## Prerequisites
 
@@ -74,21 +76,27 @@ Parameters:
 
 ### NetCut (Offense)
 
-Basic usage with automatic gateway detection:
+Basic usage with automatic gateway detection (affects all LAN devices):
 
 ```bash
 python netcut.py
 ```
 
+Target a specific IP address:
+```bash
+python netcut.py --target-ip 192.168.1.100
+```
+
 Advanced Options:
 ```bash
-python netcut.py [--fake-mac MAC_ADDRESS] [--gateway-ip GATEWAY_IP] [--interface INTERFACE_NAME]
+python netcut.py [--fake-mac MAC_ADDRESS] [--gateway-ip GATEWAY_IP] [--interface INTERFACE_NAME] [--target-ip TARGET_IP]
 ```
 
 Parameters:
 - `--fake-mac`: Custom MAC address for spoofing (optional, random MAC will be generated)
 - `--gateway-ip`: Gateway IP address (optional, will be auto-detected)
 - `--interface`: Specific network interface to use (optional)
+- `--target-ip`: Specific IP address to target (optional, will target all LAN IPs if not provided)
 
 ## Features
 
@@ -106,9 +114,11 @@ Parameters:
 
 ### Testing Features (NetCut)
 - LAN device discovery
+- Single IP targeting capability
 - Customizable MAC address spoofing
 - Continuous ARP packet transmission
 - Detailed operation logging
+- Selective targeting for focused testing
 
 ## Security Considerations
 
@@ -117,6 +127,7 @@ Parameters:
 - Should be used with caution in production environments
 - NetCut should only be used in controlled testing environments
 - Neither tool is a replacement for comprehensive network security
+- When using single IP targeting, ensure proper authorization
 
 ## Troubleshooting
 
@@ -142,6 +153,12 @@ Parameters:
    - Verify that the gateway IP is correct
    - Check for firewall rules that might block ARP requests
 
+5. **Target IP Issues**
+   - Ensure the target IP is valid and within your network range
+   - Verify the target device is active and responding to ARP
+   - Check network connectivity to the target IP
+   - Ensure proper network permissions and access rights
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -153,5 +170,6 @@ These tools are provided as-is for educational and testing purposes only. Users 
 - Following network policies and obtaining necessary permissions
 - Using the tools responsibly and ethically
 - Understanding the potential risks and implications of network testing
+- Obtaining proper authorization before targeting specific devices
 
 The authors are not responsible for any misuse or damage caused by these tools.
